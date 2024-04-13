@@ -18,6 +18,6 @@ const OrderSchema = new Schema({
     default: "pending",
   },
   selectedAddress: { type: [Schema.Types.Mixed], required: true },
-});
+},{timestamps:true});
 
 exports.Order = mongoose.model("Order", OrderSchema);

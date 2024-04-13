@@ -20,7 +20,7 @@ const ProductView = () => {
 
   const handleAddToCart = () => {
     if (isAuth) {
-      const index = items.find((item) => item?._id=== Product._id);
+      const index = items.find((item) => item?.product._id=== Product._id);
       if (index) {
         toast.error("Item Already added !");
       } else {

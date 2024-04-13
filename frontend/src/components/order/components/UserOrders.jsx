@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUserOrdersAsync, getUserOrders } from "../orderSlice";
 import { useNavigate } from "react-router-dom";
+import { ResetCartAsync } from "../../Cart/cartSlice";
 const UserOrders = () => {
   const dispatch = useDispatch();
   const orders = useSelector(getUserOrders);
@@ -14,6 +15,9 @@ const UserOrders = () => {
       navigate("/");
     }
   }, [orders]);
+  useEffect(() => {
+    dispatch(ResetCartAsync());
+  }, [dispatch]);
   return (
     <>
       {orders?.map((order, index) => (
@@ -31,10 +35,14 @@ const UserOrders = () => {
             <h3 className="text-md font-bold tracking-tighter text-red-900">
               {order.status}
             </h3>
+            <p className="mr-auto">{order?.createdAt ? new Date(order?.createdAt).toLocaleString():''}</p>
           </div>
 
           {order?.items?.map((item, index) => (
-            <div key={item?.product?._id} className=" px-1 m-1 py-6 sm:px-6 border">
+            <div
+              key={item?.product?._id}
+              className=" px-1 m-1 py-6 sm:px-6 border"
+            >
               <div className="flow-root">
                 <ul
                   key={index}

@@ -64,6 +64,7 @@ exports.getProductByID = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
+  console.log(req.query.category)
   try {
     let condition = [
       {

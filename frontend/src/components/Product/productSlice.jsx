@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllUsersProducts, getProduct, getAllCategory } from "./productAPI";
 
 const initialState = {
-  value: 0,
   status: "idle",
   product: [],
   error: "",
@@ -14,9 +13,9 @@ const initialState = {
 
 export const getAllUsersProductsAsync = createAsyncThunk(
   "product/getAllUsersProducts",
-  async ({ Filter, Sort ,pagination}, { rejectWithValue }) => {
+  async ({ Filter, Sort ,pagination,SearchObj}, { rejectWithValue }) => {
     try {
-      const response = await getAllUsersProducts(Filter, Sort,pagination);
+      const response = await getAllUsersProducts(Filter, Sort,pagination,SearchObj);
       return response.data;
     } catch (error) {
       return rejectWithValue(error);

@@ -7,6 +7,8 @@ import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserCartItemsAsync } from "./components/Cart/cartSlice";
 import { useAuthContext } from "./context/AuthContext";
+import Protected from "./components/Auth/components/Protected";
+import Testimonals from "./components/Testimonals";
 import {
   checkuserAsync,
   LoginUserDetails,
@@ -40,7 +42,7 @@ function App() {
     if (LoginUser) {
       dispatch(getuserCartItemsAsync());
     }
-  }, [dispatch, isAuth]);
+  }, [dispatch, isAuth, LoginUser]);
 
   useEffect(() => {
     dispatch(checkuserAsync());
@@ -62,12 +64,34 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/set-new-password" element={<SetNewPassword />} />
-          <Route path="/carts" element={<Carts />} />
+          <Route
+            path="/carts"
+            element={
+              <Protected>
+                <Carts />
+              </Protected>
+            }
+          />
           <Route path="/productView/:id" element={<ProductView />} />
-          <Route path="/checkout" element={<CheckOut />} />
-          <Route path="/userorder" element={<UserOrder />} />
+          <Route
+            path="/checkout"
+            element={
+              <Protected>
+                <CheckOut />
+              </Protected>
+            }
+          />
+          <Route
+            path="/userorder"
+            element={
+              <Protected>
+                <UserOrder />
+              </Protected>
+            }
+          />
         </Routes>
       </Suspense>
+      {/* <Testimonals/> */}
       <Footer />
     </Router>
   );

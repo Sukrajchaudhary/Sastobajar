@@ -3,15 +3,14 @@ import { createUsers, LoginUser, checkuser,LogOutUser,UpdateAddress } from "./au
 const initialState = {
   value: 0,
   status: "idle",
-  SignUpuser: null,
   isLoading: false,
   error: null,
-  Login: null,
   LoginErrror: null,
   CheckLoginUserInfo: null,
   Logout:null,
   LogoutError:null,
-  updateUser:null
+  updateUser:null,
+  User:null
 
 };
 
@@ -77,7 +76,7 @@ export const authSlice = createSlice({
       })
       .addCase(createUsersAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.SignUpuser = action.payload;
+        state.User = action.payload;
         state.isLoading = false;
       })
       .addCase(createUsersAsync.rejected, (state, action) => {
@@ -91,7 +90,7 @@ export const authSlice = createSlice({
       })
       .addCase(LoginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.Login = action.payload;
+        state.User = action.payload;
         state.isLoading = false;
       })
       .addCase(LoginUserAsync.rejected, (state, action) => {
@@ -122,7 +121,7 @@ export const authSlice = createSlice({
       })
       .addCase(UpdateAddressAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.updateUser = action.payload;
+        state.User = action.payload;
       })
     
   },
@@ -130,9 +129,9 @@ export const authSlice = createSlice({
 
 export const {} = authSlice.actions;
 export const SignupError = (state) => state.auth.error;
-export const SignUp = (state) => state.auth.SignUpuser;
+export const SignUp = (state) => state.auth.User;
 export const signupLoading = (state) => state.auth.isLoading;
-export const LoginUserInfo = (state) => state.auth.Login;
+export const LoginUserInfo = (state) => state.auth.User;
 export const LoginError = (state) => state.auth.LoginErrror;
 export const LoginUserDetails = (state) => state.auth.CheckLoginUserInfo;
 export const logoutInfo=(state)=>state.auth.Logout;

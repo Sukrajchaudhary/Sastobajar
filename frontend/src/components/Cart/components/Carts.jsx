@@ -21,12 +21,14 @@ const Carts = () => {
     (total, product) => total + product?.product?.price * product.quantity,
     0
   );
-  const handleDelete = (id) => {
+  const handleDelete = (e, id) => {
+    e.preventDefault();
     dispatch(deleteCartItemAsync(id));
     toast.success("Item Deleted Successfully !");
   };
 
   const handleQuantity = (e, id) => {
+    e.preventDefault();
     dispatch(updateCartAsync({ _id: id, quantity: e.target.value }));
   };
   useEffect(() => {
@@ -95,7 +97,7 @@ const Carts = () => {
                   <div className="flex divide-x text-sm">
                     <button
                       type="button"
-                      onClick={() => handleDelete(product._id)}
+                      onClick={(e) => handleDelete(e,product._id)}
                       className="flex items-center space-x-2 px-2 py-1 pl-0"
                     >
                       <Trash size={16} />

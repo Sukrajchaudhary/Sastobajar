@@ -128,11 +128,14 @@ const Navbar = () => {
                   onClick={() => setHideProfile(!hideProfile)}
                   className="relative"
                 >
-                  <img
+                  <span   className="border flex justify-center items-center relative z-0  h-10 w-10 rounded-full ring-2 text-blue-600 cursor-pointer  font-bold text-lg">
+                    {userInfo?.username.charAt(0).toUpperCase()}
+                  </span>
+                  {/* <img
                     className="relative z-0 inline-block h-10 w-10 rounded-full ring-2 ring-white cursor-pointer"
                     src="https://nextjs.org/_next/image?url=https%3A%2F%2Fwww.datocms-assets.com%2F35255%2F1665059775-delba.jpg&w=640&q=75"
                     alt="Delba"
-                  />
+                  /> */}
                 </div>
 
                 <div

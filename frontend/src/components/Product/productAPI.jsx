@@ -1,5 +1,5 @@
 import { host } from "../../Common/Api";
-export function getAllUsersProducts(Filter, Sort,pagination) {
+export function getAllUsersProducts(Filter, Sort,pagination,SearchObj) {
   let querystring = "";
   for (let key in Filter) {
     const categoryValue = Filter[key];
@@ -14,6 +14,9 @@ export function getAllUsersProducts(Filter, Sort,pagination) {
   }
   for(let key in pagination){
     querystring+=`${key}=${pagination[key]}&`
+  }
+  for(let key in SearchObj){
+    querystring =`${key}=${SearchObj[key]}&`
   }
   return new Promise(async (resolve, reject) => {
     try {
