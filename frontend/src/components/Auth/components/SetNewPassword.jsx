@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import LOGO from "../assets/bajar.png";
+import LOGO from "../../../assets/bajar.png";
 import { Link } from "react-router-dom";
 const SetNewPassword = () => {
   return (

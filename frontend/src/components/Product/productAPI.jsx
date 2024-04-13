@@ -1,5 +1,5 @@
 import { host } from "../../Common/Api";
-export function getAllUsersProducts(Filter, Sort) {
+export function getAllUsersProducts(Filter, Sort,pagination) {
   let querystring = "";
   for (let key in Filter) {
     const categoryValue = Filter[key];
@@ -12,6 +12,9 @@ export function getAllUsersProducts(Filter, Sort) {
   for (let key in Sort) {
     querystring += `${key}=${Sort[key]}&`;
   }
+  for(let key in pagination){
+    querystring+=`${key}=${pagination[key]}&`
+  }
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(`${host}/GetallProducts?` + querystring, {
@@ -23,11 +26,12 @@ export function getAllUsersProducts(Filter, Sort) {
       });
 
       if (response.ok) {
+        const totalItems = await response.headers.get("X-Total-Count");
         const data = await response.json();
-        resolve({ data });
+        resolve({ data: { products: data, totalItems: +totalItems } });
       } else {
         const error = await response.json();
-        reject({error});
+        reject({ error });
       }
     } catch (error) {
       reject(error.message);

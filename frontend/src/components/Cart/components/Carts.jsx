@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Trash, Heart, Plus, Minus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Trash, Heart } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  item,
   deleteCartItemAsync,
   updateCartAsync,
+  createdCart,
+  LoaddingState,
+  getuserCartItemsAsync
 } from "../cartSlice";
 import toast from "react-hot-toast";
+import Loading from "../../../Common/Loading";
 const Carts = () => {
   const dispatch = useDispatch();
-  const AllUserCartItems = useSelector(item);
+  const AllUserCartItems = useSelector(createdCart);
   const products = AllUserCartItems;
-  const totalAmount = products.reduce(
-    (total, product) => total + product.product.price * product.quantity,
+  const navigate = useNavigate();
+  const isLoading = useSelector(LoaddingState);
+  const totalAmount = products?.reduce(
+    (total, product) => total + product?.product?.price * product.quantity,
     0
   );
   const handleDelete = (id) => {
@@ -22,8 +27,17 @@ const Carts = () => {
   };
 
   const handleQuantity = (e, id) => {
-    dispatch(updateCartAsync({ id: id, quantity: e.target.value }));
+    dispatch(updateCartAsync({ _id: id, quantity: e.target.value }));
   };
+  useEffect(() => {
+    if (products.length <= 0) {
+      navigate("/");
+    }
+  }, [products]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -34,28 +48,27 @@ const Carts = () => {
           repellat ipsam, sit praesentium incidunt.
         </p>
         <ul className="flex flex-col divide-y divide-gray-200">
-          {products.map((product) => (
+          {products?.map((product) => (
             <li
-              key={product.id}
+              key={product?.id}
               className="flex flex-col py-6 sm:flex-row sm:justify-between"
             >
               <div className="flex w-full space-x-2 sm:space-x-4">
                 <img
                   className="h-20 w-20 flex-shrink-0 rounded object-contain outline-none dark:border-transparent sm:h-32 sm:w-32"
-                  src={product.product.thumbnail}
-                  alt={product.name}
+                  src={product?.product?.thumbnail}
+                  alt={product?.name}
                 />
                 <div className="flex w-full flex-col justify-between pb-4">
                   <div className="flex w-full justify-between space-x-2 pb-2">
                     <div className="space-y-1">
                       <h3 className="text-lg font-semibold leading-snug sm:pr-8">
-                        {product.product.title}
+                        {product?.product?.title}
                       </h3>
-                      <p className="text-sm">{product.color}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-semibold">
-                        ${product.product.price}
+                        ${product?.product?.price}
                       </p>
                     </div>
                   </div>
@@ -69,7 +82,7 @@ const Carts = () => {
                         OTY
                       </label>
                       <select
-                        onChange={(e) => handleQuantity(e, product._id)}
+                        onChange={(e) => handleQuantity(e, product?._id)}
                         value={product.quantity}
                       >
                         <option value="1">1</option>

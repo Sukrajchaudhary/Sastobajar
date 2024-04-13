@@ -8,14 +8,15 @@ const initialState = {
   error: "",
   selectedProduct: {},
   category: [],
-  isLoading: false
+  isLoading: false,
+  TotalProduct:null
 };
 
 export const getAllUsersProductsAsync = createAsyncThunk(
   "product/getAllUsersProducts",
-  async ({ Filter, Sort }, { rejectWithValue }) => {
+  async ({ Filter, Sort ,pagination}, { rejectWithValue }) => {
     try {
-      const response = await getAllUsersProducts(Filter, Sort);
+      const response = await getAllUsersProducts(Filter, Sort,pagination);
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -60,7 +61,8 @@ export const productSlice = createSlice({
       })
       .addCase(getAllUsersProductsAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.product = action.payload;
+        state.product = action.payload.products;
+        state.TotalProduct=action.payload.totalItems
         state.isLoading = false;
       })
       .addCase(getAllUsersProductsAsync.rejected, (state, action) => {
@@ -92,5 +94,6 @@ export const selectproduct = (state) => state.product.selectedProduct;
 export const error = (state) => state.product.error;
 export const Allcategory = (state) => state.product.category;
 export const Loadingstate = (state) => state.product.isLoading;
+export const TotalCount=(state)=>state.product.TotalProduct
 
 export default productSlice.reducer;

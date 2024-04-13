@@ -4,7 +4,7 @@ import Modal from "../../../Common/Modal";
 import { ShieldCheck } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductAsync, selectproduct } from "../productSlice";
-import { createCartAsync, cartitems } from "../../Cart/cartSlice";
+import { createCartAsync, createdCart } from "../../Cart/cartSlice";
 import toast from "react-hot-toast";
 import { useAuthContext } from "../../../context/AuthContext";
 const ProductView = () => {
@@ -13,14 +13,14 @@ const ProductView = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const Product = useSelector(selectproduct);
-  const items = useSelector(cartitems);
+  const items = useSelector(createdCart);
   useEffect(() => {
     dispatch(getProductAsync(params.id));
   }, [params.id]);
 
   const handleAddToCart = () => {
     if (isAuth) {
-      const index = items.find((item) => item.cart.product=== Product._id);
+      const index = items.find((item) => item?._id=== Product._id);
       if (index) {
         toast.error("Item Already added !");
       } else {

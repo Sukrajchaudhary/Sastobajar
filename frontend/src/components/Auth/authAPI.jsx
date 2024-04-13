@@ -89,3 +89,28 @@ export function LogOutUser() {
     }
   });
 }
+// updateAddress
+export function UpdateAddress(data){
+  return new Promise(async(resolve,reject)=>{
+  try {
+    const response= await fetch(`${host}/updateAddress`,{
+      method:'PATCH',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      credentials:'include',
+      body:JSON.stringify(data)
+    });
+    if(response.ok){
+      const data= await response.json();
+      resolve({data})
+    }
+    else{
+      const error= await response.json();
+      reject({error})
+    }
+  } catch (error) {
+    reject(error.message)
+  }
+  })
+}

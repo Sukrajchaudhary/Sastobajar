@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { AlignJustify, X, ShoppingCart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import LOGO from "../assets/bajar.png";
-import { item } from "../components/Cart/cartSlice";
+import { createdCart} from "../components/Cart/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useAuthContext } from "../context/AuthContext";
 import { LogOutUserAsync, logoutInfo } from "./Auth/authSlice";
@@ -18,7 +18,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [hideProfile, setHideProfile] = useState(false);
   const dropdownRef = useRef(null);
-  const TotalCartItems = useSelector(item);
+  const TotalCartItems = useSelector(createdCart);
   const { isAuth, userInfo, setisAuth } = useAuthContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();

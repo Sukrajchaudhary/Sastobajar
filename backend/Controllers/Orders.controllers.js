@@ -4,6 +4,29 @@ const { Order } = require("../models/Order.model");
 exports.createOrders = async (req, res) => {
   try {
     const { id } = req.user;
+    const {
+      items,
+      user,
+      totalAmount,
+      paymentmethod,
+      totalItems,
+      selectedAddress,
+    } = req.body;
+
+    if (
+      [
+        items,
+        user,
+        totalAmount,
+        paymentmethod,
+        totalItems,
+        selectedAddress,
+      ].some((field) => !field || field === "")
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Shipping Information is Missing." });
+    }
     const order = new Order({
       ...req.body,
       user: id,
@@ -21,32 +44,32 @@ exports.createOrders = async (req, res) => {
 exports.getOreders = async (req, res) => {
   try {
     const { id } = req.user;
-    const order = await Order.aggregate([
-      {
-        $match: {
-          productOwner: new mongoose.Types.ObjectId(id),
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
-          pipeline: [
-            {
-              $project: {
-                username: 1,
-                email: 1,
-                addresses: 1,
-                OrganizationsName: 1,
-              },
-            },
-          ],
-        },
-      },
-    ]);
-
+    // const order = await Order.aggregate([
+    //   {
+    //     $match: {
+    //       productOwner: new mongoose.Types.ObjectId(id),
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "users",
+    //       localField: "user",
+    //       foreignField: "_id",
+    //       as: "user",
+    //       pipeline: [
+    //         {
+    //           $project: {
+    //             username: 1,
+    //             email: 1,
+    //             addresses: 1,
+    //             OrganizationsName: 1,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
+    // ]);
+    const order = await Order.find({user:id});
     if (!order) {
       return res.status(200).json({
         message: "No orders Yet",

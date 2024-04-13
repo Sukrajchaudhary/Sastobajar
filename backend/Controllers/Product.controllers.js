@@ -35,8 +35,8 @@ exports.getProductByID = async (req, res) => {
     const product = await Product.aggregate([
       {
         $match: {
-          "_id": new mongoose.Types.ObjectId(id)
-        }
+          _id: new mongoose.Types.ObjectId(id),
+        },
       },
       {
         $lookup: {
@@ -50,16 +50,16 @@ exports.getProductByID = async (req, res) => {
                 username: 1,
                 email: 1,
                 OrganizationsName: 1,
-                _id: 1
-              }
-            }
-          ]
-        }
-      }
+                _id: 1,
+              },
+            },
+          ],
+        },
+      },
     ]);
-    return res.status(200).json(product[0]); // Return the first element of the product array
+    return res.status(200).json(product[0]);
   } catch (error) {
-    return res.status(500).json({ error: error.message }); // Ensure error is sent as JSON
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -132,7 +132,8 @@ exports.getAllProducts = async (req, res) => {
       );
     }
     const product = await Product.aggregate(condition).exec();
-    res.set("X-TOTAL-COUNT", product.length);
+    const total = await Product.countDocuments(condition).exec();
+    res.set("X-TOTAL-COUNT", total);
     return res.status(200).json(product);
   } catch (error) {
     return res.status(500).json(error.message);

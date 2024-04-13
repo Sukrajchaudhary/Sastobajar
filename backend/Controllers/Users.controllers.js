@@ -19,9 +19,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 exports.CreateUsers = async (req, res) => {
   try {
-    const { email, username, password,  userTypes, role } = req.body;
+    const { email, username, password, userTypes, role } = req.body;
     if (
-      [email, username, password,  userTypes, role].some(
+      [email, username, password, userTypes, role].some(
         (field) => !field || field.trim() === ""
       )
     ) {
@@ -114,7 +114,7 @@ exports.logoutUsers = async (req, res) => {
       });
     // res.json(updatedUser);
   } catch (error) {
- return   res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 exports.refreshaccessToken = async (req, res) => {
@@ -153,8 +153,33 @@ exports.refreshaccessToken = async (req, res) => {
     });
 };
 // checkUsers
-exports.checkUser=async(req,res)=>{
-if(req.user){
-  return res.status(200).json(req.user)
-}
-}
+exports.checkUser = async (req, res) => {
+  if (req.user) {
+    return res.status(200).json(req.user);
+  }
+};
+
+exports.updateUserAddress = async (req, res) => {
+  try {
+    const { id } = req.user;
+    console.log(req.body)
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "Invalid User !." });
+    }
+    const updateAddress = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          addresses: req.body.addresses,
+        },
+      },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json({ message: "Address UpdateSuccessFully!", updateAddress });
+  } catch (error) {
+    return res.status(500).json(error.message);
+  }
+};

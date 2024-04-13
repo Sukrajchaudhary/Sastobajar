@@ -6,13 +6,15 @@ const {
   logoutUsers,
   loginUsers,
   refreshaccessToken,
-  checkUser
+  checkUser,
+  updateUserAddress
 } = require("../Controllers/Users.controllers");
 router
   .post("/register", CreateUsers)
   .post("/login", loginUsers)
   .post("/logout", verifyJWT, logoutUsers)
   .post("/refresh-token", refreshaccessToken)
-  .get("/checkuser",verifyJWT, checkUser);
+  .get("/checkuser",verifyJWT, checkUser)
+  .patch("/updateAddress",verifyJWT,updateUserAddress)
 
 exports.router = router;

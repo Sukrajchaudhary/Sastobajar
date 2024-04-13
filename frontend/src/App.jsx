@@ -26,8 +26,10 @@ const Carts = lazy(() => import("./components/Cart/components/Carts"));
 const ProductView = lazy(() =>
   import("./components/Product/components/ProductView")
 );
-const CheckOut = lazy(() => import("./components/CheckOut"));
-const UserOrder = lazy(() => import("./components/UserOrders"));
+const CheckOut = lazy(() => import("./components/Checkout/CheckOut"));
+const UserOrder = lazy(() =>
+  import("./components/order/components/UserOrders")
+);
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +37,7 @@ function App() {
   const LoginUser = useSelector(LoginUserDetails);
   const LoginUserResponse = useSelector(LoginUserInfo);
   useEffect(() => {
-    if (isAuth) {
+    if (LoginUser) {
       dispatch(getuserCartItemsAsync());
     }
   }, [dispatch, isAuth]);

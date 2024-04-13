@@ -61,7 +61,7 @@ export function deleteCartItem(id){
 // update cart items
 export function updateCart(update){
   return new Promise(async(resolve,_)=>{
-    const response= await fetch(`${host}/updatecart/`+update.id,{
+    const response= await fetch(`${host}/updatecart/`+update._id,{
       method:"PATCH",
       headers:{
         'Content-Type':'application/json'

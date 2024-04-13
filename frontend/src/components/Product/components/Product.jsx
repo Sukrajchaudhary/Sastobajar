@@ -10,7 +10,6 @@ import {
   FunnelIcon,
   MinusIcon,
   PlusIcon,
-  Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import LatestProduct from "./LatestProduct";
 import Loading from "../../../Common/Loading";
@@ -19,14 +18,24 @@ import {
   Allproduct,
   Allcategory,
   getAllCategorytAsync,
-  Loadingstate
-  
+  Loadingstate,
+  TotalCount,
 } from "../productSlice";
 import { useDispatch, useSelector } from "react-redux";
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: Number(-1), current: false },
-  { name: "Price: Low to High", sort: "price", order: Number(1), current: false },
-  { name: "Price: High to Low", sort: "price", order: Number(-1), current: false },
+  {
+    name: "Price: Low to High",
+    sort: "price",
+    order: Number(1),
+    current: false,
+  },
+  {
+    name: "Price: High to Low",
+    sort: "price",
+    order: Number(-1),
+    current: false,
+  },
 ];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -38,7 +47,9 @@ const Product = () => {
   const dispatch = useDispatch();
   const Product = useSelector(Allproduct);
   const category = useSelector(Allcategory);
-  const loading=useSelector(Loadingstate)
+  const loading = useSelector(Loadingstate);
+  const TotalProduct = useSelector(TotalCount);
+  const [page, setPage] = useState(1);
   const filters = [
     {
       id: "brand",
@@ -59,9 +70,9 @@ const Product = () => {
     },
   ];
   const [Sort, setSort] = useState({});
-  
+
   // filter
- 
+
   const handlefilter = (e, section, option) => {
     const newFilter = { ...Filter };
 
@@ -81,21 +92,26 @@ const Product = () => {
 
     setFilter(newFilter);
   };
-// sort
-const handleSort=(e,option)=>{
- const sortOptions={_sort:option.sort,_order:option.order};
- setSort(sortOptions)
-}
+  // sort
+  const handleSort = (e, option) => {
+    const sortOptions = { _sort: option.sort, _order: option.order };
+    setSort(sortOptions);
+  };
   useEffect(() => {
-    dispatch(getAllUsersProductsAsync({Filter,Sort}));
+    const pagination = { _page: page, _limit: 12 };
+    dispatch(getAllUsersProductsAsync({ Filter, Sort, pagination }));
     dispatch(getAllCategorytAsync());
-  }, [dispatch,Filter,Sort]);
+  }, [dispatch, Filter, Sort, page]);
   const handleFocus = () => {
     setShow(true);
   };
   const handleBulor = () => {
     setShow(false);
   };
+  const handlePage = (page) => {
+    setPage(page);
+  };
+
   return (
     <div className="bg-[#F7F8F9]">
       {loading ? (
@@ -268,7 +284,6 @@ const handleSort=(e,option)=>{
                           <Menu.Item key={option.name}>
                             {({ active }) => (
                               <p
-                             
                                 className={classNames(
                                   option.current
                                     ? "font-lg text-gray-900 cursor-pointer"
@@ -276,7 +291,7 @@ const handleSort=(e,option)=>{
                                   active ? "bg-[#F7F8F9]" : "",
                                   "block px-4 py-2 text-sm cursor-pointer"
                                 )}
-                                onClick={(e)=>handleSort(e,option)}
+                                onClick={(e) => handleSort(e, option)}
                               >
                                 {option.name}
                               </p>
@@ -423,7 +438,11 @@ const handleSort=(e,option)=>{
                   </div>
                 </div>
               </div>
-              <Paginations></Paginations>
+              <Paginations
+                page={page}
+                handlePage={handlePage}
+                TotalProduct={TotalProduct}
+              />
             </section>
           </main>
           <LatestProduct Product={Product} />

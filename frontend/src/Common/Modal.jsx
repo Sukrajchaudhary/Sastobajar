@@ -20,7 +20,7 @@ const Modal = ({
     }
   }, [showModal]);
   const handleClick = () => {
-    navigate("/Login")
+    navigate("/login")
   }
   return (
     <Transition.Root show={showModal} as={Fragment}>

@@ -1,13 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createCart, getuserCartItems, deleteCartItem,updateCart } from "./cartAPI";
+import {
+  createCart,
+  getuserCartItems,
+  deleteCartItem,
+  updateCart,
+} from "./cartAPI";
 
 const initialState = {
   value: 0,
   status: "idle",
   isLoading: false,
   items: [],
-  userCartItems: [],
-  deleteCart: {},
 };
 
 export const createCartAsync = createAsyncThunk(
@@ -62,41 +65,48 @@ export const cartSlice = createSlice({
       .addCase(createCartAsync.rejected, (state, action) => {
         state.status = "idle";
         state.error = action.payload;
+        state.isLoading=false;
       })
       .addCase(getuserCartItemsAsync.pending, (state) => {
         state.status = "loading";
+        state.isLoading = true;
       })
       .addCase(getuserCartItemsAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.userCartItems = action.payload;
+        state.items = action.payload;
+        state.isLoading = false;
       })
 
       .addCase(deleteCartItemAsync.pending, (state) => {
         state.status = "loading";
+        state.isLoading = true;
       })
       .addCase(deleteCartItemAsync.fulfilled, (state, action) => {
         state.status = "idle";
         const index = state.items.findIndex(
-          (item) => item.id === action.payload.cart._id
+          (item) => item._id === action.payload.cart._id
         );
+
         state.items.splice(index, 1);
+        state.isLoading = false;
       })
       .addCase(updateCartAsync.pending, (state) => {
         state.status = "loading";
+        state.isLoading = true;
       })
       .addCase(updateCartAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        const index = state.userCartItems.findIndex(
-          (item) => item.id !== action.payload.cart._id
+        const index = state.items.findIndex(
+          (item) => item._id === action.payload._id
         );
-        state.userCartItems[index]=action.payload
+        state.items[index] = action.payload;
+        state.isLoading = false;
       });
   },
 });
 
 export const {} = cartSlice.actions;
-export const cartitems = (state) => state.cart.items;
-export const item = (state) => state.cart.userCartItems;
-export const deleteitems = (state) => state.cart.deleteCart;
+export const createdCart = (state) => state.cart.items;
+export const LoaddingState = (state) => state.cart.isLoading;
 
 export default cartSlice.reducer;

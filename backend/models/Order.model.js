@@ -5,7 +5,13 @@ const OrderSchema = new Schema({
   totalAmount: { type: Number },
   totalItems: { type: Number },
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  productOwner: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  // productOwner: [
+  //   {
+  //     owner_ID: { type: String, require: true },
+  //     product_id: { type: String, required: true },
+  //     quantity: { type: Number, required: true },
+  //   },
+  // ],
   paymentmethod: { type: String, required: true },
   status: {
     type: String,
