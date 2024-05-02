@@ -1,5 +1,5 @@
 import { host } from "../../Common/Api";
-export function getAllUsersProducts(Filter, Sort,pagination,SearchObj) {
+export function getAllUsersProducts(Filter, Sort, pagination, SearchObj) {
   let querystring = "";
   for (let key in Filter) {
     const categoryValue = Filter[key];
@@ -12,11 +12,11 @@ export function getAllUsersProducts(Filter, Sort,pagination,SearchObj) {
   for (let key in Sort) {
     querystring += `${key}=${Sort[key]}&`;
   }
-  for(let key in pagination){
-    querystring+=`${key}=${pagination[key]}&`
+  for (let key in pagination) {
+    querystring += `${key}=${pagination[key]}&`;
   }
-  for(let key in SearchObj){
-    querystring =`${key}=${SearchObj[key]}&`
+  for (let key in SearchObj) {
+    querystring = `${key}=${SearchObj[key]}&`;
   }
   return new Promise(async (resolve, reject) => {
     try {
@@ -84,4 +84,47 @@ export function getAllCategory() {
       rejects(error.message);
     }
   });
+}
+
+// Create Product
+export function AddProduct(formData) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch("http://localhost:8080/api/create-product", {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+      if (response.ok) {
+        const data = await response.json();
+        resolve({ data });
+      } else {
+        const error = await response.json();
+        reject({ error });
+      }
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+}
+
+// userProduct
+export function getUserProduct(){
+  return new Promise(async(resolve,reject)=>{
+    const response= await fetch(`${host}/getUserProduct`,{
+      method:'GET',
+      credentials:"include",
+      headers:{
+        'Content-Types':'application/json'
+      }
+    });
+    if(response.ok){
+      const data=await response.json();
+      resolve({data})
+    }
+    else{
+    const error =await response.json();
+    resolve({error})
+    }
+  })
 }

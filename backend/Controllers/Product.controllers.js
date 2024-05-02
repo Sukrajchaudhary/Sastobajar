@@ -1,12 +1,15 @@
-const { default: mongoose } = require("mongoose");
 const { Product } = require("../models/Product.model");
+const { default: mongoose } = require("mongoose");
 const { uploadOnCloudinary } = require("../utils/cloudinary");
 exports.createProduct = async (req, res) => {
   try {
+    const { title, description, price, discountPercentage, stock, category } =
+      req.body;
     const { id } = req.user;
     const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
-    const imagesLocalPath = req.files?.images[0]?.path;
-    console.log(thumbnailLocalPath);
+    const imagesLocalPath1 = req.files?.image1[0]?.path;
+    const imagesLocalPath2 = req.files?.image2[0]?.path;
+    const imagesLocalPath3 = req.files?.image3[0]?.path;
     if (!thumbnailLocalPath) {
       return res.status(400).json({
         message: "Thumbnail is required",
@@ -14,12 +17,22 @@ exports.createProduct = async (req, res) => {
     }
 
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
-    const images = await uploadOnCloudinary(imagesLocalPath);
+    const images1 = await uploadOnCloudinary(imagesLocalPath1);
+    const images2 = await uploadOnCloudinary(imagesLocalPath2);
+    const images3 = await uploadOnCloudinary(imagesLocalPath3);
+    const images = [images1?.url, images2?.url, images3?.url];
+    console.log(images);
     const product = new Product({
       ...req.body,
+      title: title,
+      description: description,
       user: id,
+      price: +price,
+      discountPercentage: +discountPercentage,
+      stock: +stock,
+      category: category,
       thumbnail: thumbnail.url || "",
-      images: images.url || "",
+      images: images || "",
     });
     await product.save();
     return res
@@ -32,39 +45,16 @@ exports.createProduct = async (req, res) => {
 exports.getProductByID = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.aggregate([
-      {
-        $match: {
-          _id: new mongoose.Types.ObjectId(id),
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "user",
-          foreignField: "_id",
-          as: "owner",
-          pipeline: [
-            {
-              $project: {
-                username: 1,
-                email: 1,
-                OrganizationsName: 1,
-                _id: 1,
-              },
-            },
-          ],
-        },
-      },
-    ]);
-    return res.status(200).json(product[0]);
+  
+
+    const product=await Product.findById(id).populate('user')
+    return res.status(200).json(product);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
 
 exports.getAllProducts = async (req, res) => {
-  console.log(req.query.category)
   try {
     let condition = [
       {

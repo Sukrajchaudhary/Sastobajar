@@ -1,9 +1,9 @@
-const { ReturnDocument } = require("mongodb");
-const { User } = require("../models/Users.model");
+const { Users } = require("../models/Users.model");
 const jwt = require("jsonwebtoken");
+const { SendMail } = require("../utils/mailsent");
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
-    const user = await User.findById(userId);
+    const user = await Users.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
@@ -28,17 +28,17 @@ exports.CreateUsers = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const existedUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existedUser = await Users.findOne({ $or: [{ email }, { username }] });
     if (existedUser) {
       return res
         .status(409)
         .json({ message: "User with this email or username already exists." });
     }
 
-    const user = new User(req.body);
+    const user = new Users(req.body);
     await user.save();
 
-    const findUser = await User.findById(user._id).select(
+    const findUser = await Users.findById(user._id).select(
       "-password -resetPasswordToken"
     );
     if (!findUser) {
@@ -61,7 +61,7 @@ exports.loginUsers = async (req, res) => {
         message: "email or password is Required",
       });
     }
-    const user = await User.findOne({ email });
+    const user = await Users.findOne({ email });
     if (!user) {
       return res
         .status(400)
@@ -124,7 +124,7 @@ exports.refreshaccessToken = async (req, res) => {
     incommingRefreshToken,
     process.env.RefreshTokenSecret
   );
-  const user = await User.findById(decodedToken?.id);
+  const user = await Users.findById(decodedToken?.id);
   if (!user) {
     return res.status(401).json({
       message: "Invalid Token",
@@ -162,12 +162,11 @@ exports.checkUser = async (req, res) => {
 exports.updateUserAddress = async (req, res) => {
   try {
     const { id } = req.user;
-    console.log(req.body)
-    const user = await User.findById(id);
+    const user = await Users.findById(id);
     if (!user) {
       return res.status(400).json({ message: "Invalid User !." });
     }
-    const updateAddress = await User.findByIdAndUpdate(
+    const updateAddress = await Users.findByIdAndUpdate(
       id,
       {
         $set: {
@@ -183,3 +182,30 @@ exports.updateUserAddress = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
+exports.ResetPasswordLink = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const isEmailExist = await Users.findOne({ email: email }); 
+    if (isEmailExist) {
+      const resetPasswordToken = await jwt.sign(
+        { email: email },
+        process.env.RefreshTokenSecret,
+        {
+          expiresIn: "2h",
+        }
+      );
+      isEmailExist.resetPasswordToken = resetPasswordToken;
+      await isEmailExist.save({ validateBeforeSave: false });
+      const subject = "Password-Reset";
+      const path = "http://localhost:5173/set-new-password?token=" + resetPasswordToken; 
+      const html = `<p> Please click here to reset your Password <a href="${path}"> click here</a>  </p>`;
+      const response = await SendMail({ to: email, subject, html });
+      return res.status(200).json(response);
+    } else {
+      return res.status(400).json({ message: "Invalid Email Address !" });
+    }
+  } catch (error) {
+    return res.status(500).json(error.message);
+  }
+};  

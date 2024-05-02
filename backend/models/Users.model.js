@@ -83,4 +83,4 @@ userSchema.methods.generatesRefreshToken = async function () {
     }
   );
 };
-exports.User = mongoose.model("users", userSchema);
+exports.Users = mongoose.model("Users", userSchema);

@@ -8,7 +8,7 @@ import { createCartAsync, createdCart } from "../../Cart/cartSlice";
 import toast from "react-hot-toast";
 import { useAuthContext } from "../../../context/AuthContext";
 const ProductView = () => {
-  const  {isAuth} =useAuthContext()
+  const { isAuth } = useAuthContext();
   const params = useParams();
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -20,11 +20,11 @@ const ProductView = () => {
 
   const handleAddToCart = () => {
     if (isAuth) {
-      const index = items.find((item) => item?.product._id=== Product._id);
+      const index = items.find((item) => item?.product._id === Product?._id);
       if (index) {
         toast.error("Item Already added !");
       } else {
-        const ownerId = Product.owner[0]?._id;
+        const ownerId = Product.user?._id;
         const newItems = {
           productOwner: ownerId,
           product: Product._id,
@@ -200,13 +200,14 @@ const ProductView = () => {
                 </div>
                 <div className="ml-4">
                   <div className="text-md flex font-medium text-black">
-                    <p>sukraj chaudhary</p>
+                    <p>{Product?.user?.username}</p>
                     <span>
                       <ShieldCheck size={24} color="#2c14e1" />
                     </span>
                   </div>
                   <div className="text-sm text-gray-500">
-                    sukrajchaudhary90@gmail.com
+                    <p>{Product?.user?.email}</p>
+                    <p>{Product?.user?.OrganizationsName}</p>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const {User} = require("../models/Users.model");
+const {Users} = require("../models/Users.model");
 exports.verifyJWT = async (req, res, next) => {
   try {
     const token =
@@ -11,7 +11,7 @@ exports.verifyJWT = async (req, res, next) => {
       });
     }
     const decodedToken = jwt.verify(token, process.env.RefreshTokenSecret);
-    const user = await User.findById(decodedToken?.id).select(
+    const user = await Users.findById(decodedToken?.id).select(
       "-password -refreshToken"
     );
     if (!user) {

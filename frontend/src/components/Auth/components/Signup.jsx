@@ -255,7 +255,7 @@ const Signup = () => {
                   </div>
                 </div>
                 {/* Password */}
-                <div>
+                <div className="flex flex-col">
                   <div className="flex items-center justify-between">
                     <label
                       htmlFor="password"
@@ -278,6 +278,10 @@ const Signup = () => {
                       <p className="text-red-600">{error.password}</p>
                     )}
                   </div>
+
+                  <p className="ml-auto cursor-pointer font-md text-gray-900">
+                    <Link to="/forget-password">Forget Password ?</Link>
+                  </p>
                 </div>
                 {/* Confirm Password */}
                 <div>

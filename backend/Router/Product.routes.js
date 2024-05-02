@@ -20,9 +20,18 @@ router
         maxCount: 1,
       },
       {
-        name: "images",
-        maxCount: 4,
+        name: "image1",
+        maxCount: 1,
       },
+      {
+        name: "image2",
+        maxCount: 1,
+      },
+      {
+        name: "image3",
+        maxCount: 1,
+      },
+      
     ]),
     createProduct
   )

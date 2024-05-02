@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 const productSchema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Users",
   },
   title: {
     type: String,
@@ -23,7 +23,7 @@ const productSchema = new Schema({
   },
   rating: {
     type: Number,
-    required: true,
+   default:1
   },
   stock: {
     type: Number,
@@ -33,7 +33,7 @@ const productSchema = new Schema({
   },
   brand: {
     type: String,
-    required: true,
+    
   },
   category: {
     type: String,

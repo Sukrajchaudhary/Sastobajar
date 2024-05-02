@@ -7,7 +7,7 @@ import {
   updateCartAsync,
   createdCart,
   LoaddingState,
-  getuserCartItemsAsync
+  getuserCartItemsAsync,
 } from "../cartSlice";
 import toast from "react-hot-toast";
 import Loading from "../../../Common/Loading";
@@ -15,6 +15,7 @@ const Carts = () => {
   const dispatch = useDispatch();
   const AllUserCartItems = useSelector(createdCart);
   const products = AllUserCartItems;
+  console.log(products)
   const navigate = useNavigate();
   const isLoading = useSelector(LoaddingState);
   const totalAmount = products?.reduce(
@@ -46,8 +47,7 @@ const Carts = () => {
       <div className="mx-auto flex max-w-3xl flex-col space-y-4 p-6 px-2 sm:p-10 sm:px-2">
         <h2 className="text-3xl font-bold">Your cart</h2>
         <p className="mt-3 text-sm font-medium text-gray-700">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum eius
-          repellat ipsam, sit praesentium incidunt.
+          These is a Your Selected Carts Items.
         </p>
         <ul className="flex flex-col divide-y divide-gray-200">
           {products?.map((product) => (
@@ -97,7 +97,7 @@ const Carts = () => {
                   <div className="flex divide-x text-sm">
                     <button
                       type="button"
-                      onClick={(e) => handleDelete(e,product._id)}
+                      onClick={(e) => handleDelete(e, product._id)}
                       className="flex items-center space-x-2 px-2 py-1 pl-0"
                     >
                       <Trash size={16} />
@@ -107,8 +107,12 @@ const Carts = () => {
                       type="button"
                       className="flex items-center space-x-2 px-2 py-1"
                     >
-                      <Heart size={16} />
-                      <span>Add to favorites</span>
+                      <span className="text-green-400 font-bold">
+                        Own By: {"   "}
+                        <span className="text-blue-700 font-bold">
+                          {product?.owner?.username}
+                        </span>
+                      </span>
                     </button>
                   </div>
                 </div>

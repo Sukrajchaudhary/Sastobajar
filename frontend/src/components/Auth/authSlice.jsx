@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUsers, LoginUser, checkuser,LogOutUser,UpdateAddress } from "./authAPI";
+import {
+  createUsers,
+  LoginUser,
+  checkuser,
+  LogOutUser,
+  UpdateAddress,
+} from "./authAPI";
 const initialState = {
   value: 0,
   status: "idle",
@@ -7,11 +13,10 @@ const initialState = {
   error: null,
   LoginErrror: null,
   CheckLoginUserInfo: null,
-  Logout:null,
-  LogoutError:null,
-  updateUser:null,
-  User:null
-
+  Logout: null,
+  LogoutError: null,
+  updateUser: null,
+  User: null,
 };
 
 export const createUsersAsync = createAsyncThunk(
@@ -111,6 +116,7 @@ export const authSlice = createSlice({
       .addCase(LogOutUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.Logout = action.payload;
+        state.User = null;
       })
       .addCase(LogOutUserAsync.rejected, (state, action) => {
         state.status = "idle";
@@ -122,8 +128,7 @@ export const authSlice = createSlice({
       .addCase(UpdateAddressAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.User = action.payload;
-      })
-    
+      });
   },
 });
 
@@ -134,9 +139,7 @@ export const signupLoading = (state) => state.auth.isLoading;
 export const LoginUserInfo = (state) => state.auth.User;
 export const LoginError = (state) => state.auth.LoginErrror;
 export const LoginUserDetails = (state) => state.auth.CheckLoginUserInfo;
-export const logoutInfo=(state)=>state.auth.Logout;
-export const LogoutErrorLog=(state)=>state.auth.LogoutError;
-
-
+export const logoutInfo = (state) => state.auth.Logout;
+export const LogoutErrorLog = (state) => state.auth.LogoutError;
 
 export default authSlice.reducer;

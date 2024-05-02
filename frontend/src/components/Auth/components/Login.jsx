@@ -6,7 +6,6 @@ import { LoginUserAsync, LoginError, LoginUserInfo } from "../authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 const Login = () => {
-
   const [value, setValue] = useState({
     email: "",
     password: "",
@@ -28,7 +27,13 @@ const Login = () => {
   const LoginUserResponse = useSelector(LoginUserInfo);
   useEffect(() => {
     if (LoginUserResponse) {
-      navigate("/");
+      if (LoginUserResponse?.user?.userTypes === "individuals") {
+        navigate("/");
+      } else if (LoginUserResponse?.user?.userTypes === "organizations") {
+        navigate("/organizations/home");
+      } else {
+        return null;
+      }
     }
   }, [LoginUserResponse]);
   const handleSubmit = (e) => {

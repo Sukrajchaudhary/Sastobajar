@@ -2,47 +2,38 @@ import React, { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loading from "./Common/Loading";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserCartItemsAsync } from "./components/Cart/cartSlice";
 import { useAuthContext } from "./context/AuthContext";
 import Protected from "./components/Auth/components/Protected";
-import Testimonals from "./components/Testimonals";
+import Carts from "./Pages/CartPages";
 import {
   checkuserAsync,
   LoginUserDetails,
   LoginUserInfo,
 } from "./components/Auth/authSlice";
 // Lazy loading components
-const Signup = lazy(() => import("./components/Auth/components/Signup"));
-const Login = lazy(() => import("./components/Auth/components/Login"));
-const ForgetPassword = lazy(() =>
-  import("./components/Auth/components/ForgetPassword")
-);
-const SetNewPassword = lazy(() =>
-  import("./components/Auth/components/SetNewPassword")
-);
+const Signup = lazy(() => import("./Pages/SignupPages"));
+const Login = lazy(() => import("./Pages/LoginPages"));
+const ForgetPassword = lazy(() => import("./Pages/ForgetPasswordPages"));
+const SetNewPassword = lazy(() => import("./Pages/SetNewPasswordPages"));
 const HomePages = lazy(() => import("./Pages/HomePages"));
-const Carts = lazy(() => import("./components/Cart/components/Carts"));
-const ProductView = lazy(() =>
-  import("./components/Product/components/ProductView")
-);
-const CheckOut = lazy(() => import("./components/Checkout/CheckOut"));
-const UserOrder = lazy(() =>
-  import("./components/order/components/UserOrders")
-);
 
+const ProductView = lazy(() => import("./Pages/ProductViewPages"));
+const CheckOut = lazy(() => import("./Pages/CheckoutPages"));
+const UserOrder = lazy(() => import("./Pages/OrderPages"));
+const OrganizationHome = lazy(() => import("./Admin/components/Home"));
+const UploadProduct = lazy(() => import("./Pages/UploadProductPages"));
+const UserProducts = lazy(() => import("./Pages/UserProductsPages"));
 function App() {
   const dispatch = useDispatch();
   const { isAuth, setisAuth, setuserInfo } = useAuthContext();
   const LoginUser = useSelector(LoginUserDetails);
   const LoginUserResponse = useSelector(LoginUserInfo);
   useEffect(() => {
-    if (LoginUser) {
-      dispatch(getuserCartItemsAsync());
-    }
-  }, [dispatch, isAuth, LoginUser]);
+    dispatch(getuserCartItemsAsync());
+  }, [dispatch, isAuth]);
 
   useEffect(() => {
     dispatch(checkuserAsync());
@@ -56,7 +47,7 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <Toaster />
+
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<HomePages />} />
@@ -64,6 +55,19 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/set-new-password" element={<SetNewPassword />} />
+          <Route
+            path="/organizations/uploadproduct/"
+            element={<UploadProduct />}
+          />
+          <Route
+            path="/organizations/view/product"
+            element={<UserProducts />}
+          />
+          <Route
+            path="/organizations/home"
+            extact
+            element={<OrganizationHome />}
+          />
           <Route
             path="/carts"
             element={
@@ -91,8 +95,8 @@ function App() {
           />
         </Routes>
       </Suspense>
-      {/* <Testimonals/> */}
-      <Footer />
+
+      <Toaster />
     </Router>
   );
 }

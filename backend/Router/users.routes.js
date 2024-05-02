@@ -7,7 +7,8 @@ const {
   loginUsers,
   refreshaccessToken,
   checkUser,
-  updateUserAddress
+  updateUserAddress,
+  ResetPasswordLink
 } = require("../Controllers/Users.controllers");
 router
   .post("/register", CreateUsers)
@@ -16,5 +17,6 @@ router
   .post("/refresh-token", refreshaccessToken)
   .get("/checkuser",verifyJWT, checkUser)
   .patch("/updateAddress",verifyJWT,updateUserAddress)
+  .post('/ResetPasswordLink',ResetPasswordLink)
 
 exports.router = router;

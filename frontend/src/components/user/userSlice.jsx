@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ForgrtPassword } from "./userAPI";
+import {ResetPasswordLink } from "./userAPI";
 const initialState = {
   status: "idle",
+  ResetLink:false,
+  Error:null
 };
 
-export const ForgrtPasswordAsync = createAsyncThunk(
-  "user/ForgrtPassword",
-  async (_,{rejectWithValue}) => {
+export const ResetPasswordLinkAsync = createAsyncThunk(
+  "user/ResetPasswordLink",
+  async (to,{rejectWithValue}) => {
     try {
-        const response= await ForgrtPassword();
+        const response= await ResetPasswordLink(to);
         return response.data
     } catch (error) {
         return rejectWithValue(error)
@@ -24,20 +26,25 @@ export const userSlice = createSlice({
   
     extraReducers: (builder) => {
       builder
-        .addCase(ForgrtPasswordAsync.pending, (state) => {
+        .addCase(ResetPasswordLinkAsync.pending, (state) => {
           state.status = "loading";
-          state.isLoading = true;
         })
-        .addCase(ForgrtPasswordAsync.fulfilled, (state, action) => {
+        .addCase(ResetPasswordLinkAsync.fulfilled, (state, action) => {
           state.status = "idle";
-         
+         state.ResetLink=true
+        })
+        .addCase(ResetPasswordLinkAsync.rejected, (state, action) => {
+          state.status = "idle";
+         state.Error=action.payload
         })
      
     },
   });
   
   export const {} = userSlice.actions;
-  export const Allproduct = (state) => state.product.product;
+  export const resetLink = (state) => state.user.ResetLink;
+  export const ErrorMessage = (state) => state.user.Error;
+
  
   
   export default userSlice.reducer;

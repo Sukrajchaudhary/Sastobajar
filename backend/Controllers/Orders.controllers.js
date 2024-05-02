@@ -1,8 +1,8 @@
-const { default: mongoose } = require("mongoose");
 const { Order } = require("../models/Order.model");
 
 exports.createOrders = async (req, res) => {
   try {
+    console.log(req.body);
     const { id } = req.user;
     const {
       items,
@@ -69,7 +69,7 @@ exports.getOreders = async (req, res) => {
     //     },
     //   },
     // ]);
-    const order = await Order.find({user:id});
+    const order = await Order.find({ user: id });
     if (!order) {
       return res.status(200).json({
         message: "No orders Yet",

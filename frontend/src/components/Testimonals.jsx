@@ -14,12 +14,12 @@ const Testimonals = () => {
               <div className="flex items-center gap-4">
                 <img
                   alt=""
-                  src={Logo}
+                  src='http://res.cloudinary.com/dfzg6gkoh/image/upload/v1712151178/bgxw7aowlgxez5sbitif.jpg'
                   className="size-14 rounded-full object-cover"
                 />
 
                 <div>
-                  <div className="flex justify-center gap-0.5 text-green-500">
+                  <div className="flex justify-center gap-0.5 text-yellow-500">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"

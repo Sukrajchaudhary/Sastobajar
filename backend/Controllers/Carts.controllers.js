@@ -71,11 +71,13 @@ exports.getUserCartItems = async (req, res) => {
 exports.updateUserCartItems = async (req, res) => {
   try {
     const { id } = req.params;
+    const { quantity } = req.body;
     const cart = await Cart.findByIdAndUpdate(
       id,
-      { ...req.body },
+      { $set: { quantity: quantity } },
       { new: true }
     );
+
     return res.status(200).json(cart);
   } catch (error) {
     return res.status(500).json(error.message);
